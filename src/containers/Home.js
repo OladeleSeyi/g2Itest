@@ -1,5 +1,6 @@
 import React from "react";
 import { Container, Button, Paper, Typography } from "@material-ui/core";
+import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
@@ -69,6 +70,8 @@ export default function Home() {
         <Button
           align="center"
           className={classes.footer}
+          component={Link}
+          to="/trivia"
           variant="contained"
           color="secondary"
         >
