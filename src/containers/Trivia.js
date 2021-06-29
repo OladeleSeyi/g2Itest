@@ -8,10 +8,10 @@ import {
   Card,
   CardActions,
   CardContent,
+  CircularProgress,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { TriviaContext } from "../context/Trivia";
-import { john } from "../data";
 
 const useStyles = makeStyles({
   root: {
@@ -47,45 +47,46 @@ export default function Trivia() {
   const history = useHistory();
   const { updateAnswers } = useContext(TriviaContext);
 
-  const [questions, setQuestions] = useState(john.results);
+  const [questions, setQuestions] = useState([]);
   // keeps track of the current question
   let [count, setCount] = useState(0);
   // current question
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [current, setCurrent] = useState({});
   const [answers, setAnswers] = useState([]);
   const classes = useStyles();
   const url =
     "https://opentdb.com/api.php?amount=10&difficulty=hard&type=boolean";
 
-  function answer(data, reply) {
-    // check if correct and  set the answer to the answers array
-    if (reply === data.correct_answer) {
-      setAnswers([...answers, { correct: true, ...data }]);
-    } else {
-      setAnswers([...answers, { correct: false, ...data }]);
+  function renderPaper() {
+    if (error) {
+      return (
+        <Paper
+          className={classes.paper}
+          style={{ height: "100vh" }}
+          justify="center"
+        >
+          <Card className={classes.root} variant="outlined" justify="center">
+            <CardContent>
+              <Typography variant="h6">{error}</Typography>
+            </CardContent>
+            <CardActions style={{ margin: "auto" }}>
+              <Button
+                size="small"
+                color="primary"
+                className={classes.actions}
+                onClick={() => history.go(0)}
+              >
+                Refresh
+              </Button>
+            </CardActions>
+          </Card>
+        </Paper>
+      );
     }
-    // check if there are more questions
 
-    // If there are, render next question
-    if (count < 9) {
-      setCount((count) => count + 1);
-      return;
-    }
-    // if not, update context and push to the results page
-    updateAnswers(answers);
-    history.push("/results");
-  }
-  useEffect(() => {
-    setQuestions(john.results);
-
-    setCurrent(questions[count]);
-  });
-  //  Update the UI to show the current question
-  useEffect(() => {
-    setCurrent(questions[count]);
-  }, [count]);
-  return (
-    <Container style={{ width: "100%" }}>
+    return (
       <Paper
         className={classes.paper}
         style={{ height: "100vh" }}
@@ -126,6 +127,60 @@ export default function Trivia() {
           {count + 1} of 10
         </Typography>
       </Paper>
+    );
+  }
+
+  function answer(data, reply) {
+    // check if correct and  set the answer to the answers array
+    if (reply === data.correct_answer) {
+      setAnswers([...answers, { correct: true, ...data }]);
+    } else {
+      setAnswers([...answers, { correct: false, ...data }]);
+    }
+    // check if there are more questions
+
+    // If there are, render next question
+    if (count < 9) {
+      setCount((count) => count + 1);
+      return;
+    }
+    // if not, update context and push to the results page
+    updateAnswers(answers);
+    history.push("/results");
+  }
+
+  useEffect(() => {
+    const getQuiz = async () => {
+      try {
+        const data = await fetch(url);
+        const quiz = await data.json();
+        console.log(quiz);
+        if (quiz.response_code !== 0) {
+          throw new Error("Error loading data");
+        }
+        setQuestions(quiz.results);
+        setCurrent(questions[count]);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+
+        setError("An error occured. Please refresh");
+        setLoading(false);
+      }
+    };
+
+    getQuiz();
+  }, []);
+  //  Update the UI to show the current question
+
+  useEffect(() => {
+    setCurrent(questions[count]);
+  }, [count, questions]);
+
+  return (
+    <Container>
+      {loading ? <CircularProgress /> : renderPaper()}
+      {}
     </Container>
   );
 }
