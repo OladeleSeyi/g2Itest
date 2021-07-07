@@ -11,7 +11,7 @@ import {
   CircularProgress,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { TriviaContext } from "../context/Trivia";
+import { TriviaContext } from "../../context/Trivia";
 
 const useStyles = makeStyles({
   root: {
@@ -50,16 +50,16 @@ export default function Trivia() {
   const [questions, setQuestions] = useState([]);
   // keeps track of the current question
   let [count, setCount] = useState(0);
-  // current question
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  // current question
   const [current, setCurrent] = useState({});
   const [answers, setAnswers] = useState([]);
   const classes = useStyles();
   const url =
     "https://opentdb.com/api.php?amount=10&difficulty=hard&type=boolean";
 
-  function renderPaper() {
+  function renderPage() {
     if (error) {
       return (
         <Paper
@@ -141,12 +141,11 @@ export default function Trivia() {
 
     // If there are, render next question
     if (count < 9) {
-      setCount((count) => count + 1);
-      return;
+      return setCount((count) => count + 1);
     }
     // if not, update context and push to the results page
     updateAnswers(answers);
-    history.push("/results");
+    return history.push("/results");
   }
 
   useEffect(() => {
@@ -154,23 +153,22 @@ export default function Trivia() {
       try {
         const data = await fetch(url);
         const quiz = await data.json();
-        console.log(quiz);
         if (quiz.response_code !== 0) {
           throw new Error("Error loading data");
         }
         setQuestions(quiz.results);
         setCurrent(questions[count]);
-        setLoading(false);
+        return setLoading(false);
       } catch (error) {
         console.log(error);
 
         setError("An error occured. Please refresh");
-        setLoading(false);
+        return setLoading(false);
       }
     };
 
-    getQuiz();
-  }, []);
+    if (questions.length === 0) getQuiz();
+  }, [count, questions]);
   //  Update the UI to show the current question
 
   useEffect(() => {
@@ -179,7 +177,7 @@ export default function Trivia() {
 
   return (
     <Container>
-      {loading ? <CircularProgress /> : renderPaper()}
+      {loading ? <CircularProgress /> : renderPage()}
       {}
     </Container>
   );

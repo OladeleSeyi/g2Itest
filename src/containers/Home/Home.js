@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Button, Paper, Typography } from "@material-ui/core";
+import { Container, Paper, Typography } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -36,6 +36,7 @@ const useStyles = makeStyles({
     top: "80%",
     left: "50%",
     transform: "translate(-50%, 90%)",
+    textDecoration: "none",
   },
   actions: {
     margin: "auto",
@@ -67,18 +68,17 @@ export default function Home() {
         >
           Can you score 100% ?
         </Typography>
-        <Button
+        <Typography
           align="center"
           className={classes.footer}
           component={Link}
           to="/trivia"
-          variant="contained"
           color="secondary"
+          variant="h5"
+          gutterBottom
         >
-          <Typography variant="body2" gutterBottom>
-            BEGIN
-          </Typography>
-        </Button>
+          BEGIN
+        </Typography>
       </Paper>
     </Container>
   );

@@ -1,15 +1,27 @@
 import React, { useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
-import { TriviaContext } from "../context/Trivia";
-import { Container, Button, Paper, Typography, Grid } from "@material-ui/core";
+import { TriviaContext } from "../../context/Trivia";
+import { Container, Paper, Typography, Grid } from "@material-ui/core";
 
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles({
+  footer: {
+    margin: 0,
+    position: "absolute",
+    top: "90%",
+    left: "50%",
+    transform: "translate(-50%, 90%)",
+    textDecoration: "none",
+  },
+});
 
 export default function Results() {
   const history = useHistory();
   const { answers } = useContext(TriviaContext);
-
+  const classes = useStyles();
   function computeScore(data) {
     // retrieve the correctly answered questions
     const correctAnswers = data.filter((item) => item.correct);
@@ -60,11 +72,16 @@ export default function Results() {
           </Typography>
         )}
         {renderResults(answers)}
-        <Button component={Link} to="/" variant="contained" color="secondary">
-          <Typography variant="body2" gutterBottom>
-            Play Again ?
-          </Typography>
-        </Button>
+        <Typography
+          component={Link}
+          to="/"
+          className={classes.footer}
+          variant="h5"
+          color="secondary"
+          gutterBottom
+        >
+          Play Again ?
+        </Typography>
       </Paper>
     </Container>
   );
