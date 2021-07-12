@@ -2,21 +2,9 @@ import React, { useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { TriviaContext } from "../../context/Trivia";
 import { Container, Paper, Typography, Grid } from "@material-ui/core";
-
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
-import { makeStyles } from "@material-ui/core/styles";
-
-const useStyles = makeStyles({
-  footer: {
-    margin: 0,
-    position: "absolute",
-    top: "90%",
-    left: "50%",
-    transform: "translate(-50%, 90%)",
-    textDecoration: "none",
-  },
-});
+import useStyles from "./styles";
 
 export default function Results() {
   const history = useHistory();
