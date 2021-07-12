@@ -1,12 +1,17 @@
 import { makeStyles } from "@material-ui/core/styles";
 
 export default makeStyles(() => ({
+  resultsPaper: {
+    position: "relative",
+    minHeight: "100vh",
+    maxWidth: "70%",
+    margin: "auto",
+    padding: "10px",
+  },
   footer: {
-    margin: 0,
     position: "absolute",
-    top: "90%",
-    left: "50%",
-    transform: "translate(-50%, 90%)",
+    margin: "auto, 0",
+    bottom: 20,
     textDecoration: "none",
   },
 }));

@@ -1,12 +1,13 @@
 import React, { useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
+import PropTypes from "prop-types";
 import { TriviaContext } from "../../context/Trivia";
 import { Container, Paper, Typography, Grid } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import useStyles from "./styles";
 
-export default function Results() {
+function Results() {
   const history = useHistory();
   const { answers } = useContext(TriviaContext);
   const classes = useStyles();
@@ -45,14 +46,7 @@ export default function Results() {
   };
   return (
     <Container gutterbottom={4}>
-      <Paper
-        style={{
-          minHeight: "100vh",
-          maxWidth: "70%",
-          margin: "auto",
-          padding: "10px",
-        }}
-      >
+      <Paper className={classes.resultsPaper}>
         {answers.length >= 3 && (
           <Typography my={5} variant="h4" align="center" gutterBottom>
             You scored <br />
@@ -74,3 +68,9 @@ export default function Results() {
     </Container>
   );
 }
+
+Results.propTypes = {
+  answers: PropTypes.array,
+};
+
+export default Results;
